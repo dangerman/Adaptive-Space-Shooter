@@ -1,0 +1,393 @@
+<html>
+<head>
+Game
+</br>
+<body>
+<p>Use arrow keys or mouse to move and click or press space to shoot
+</p>
+<canvas id = "myCanvas" width="600" height="500" tabindex="1">
+<!-- Need to set the tab index so it gets keyboard inputs -->
+</canvas>
+<p id = "scores">
+</p>
+<p id = "stats">
+</p>
+<script type="text/javascript">
+//Remove curosr
+document.getElementById("myCanvas").style.cursor = "none";
+//Set up audio
+maxchannels = 10; // Allows multiple sounds to be played in parallel
+channels = new Array();
+for (var i=0;i<maxchannels;i++) {
+	channels[i]= new Array();
+	channels[i]['channel'] = new Audio();
+	channels[i]['finished'] = -1;
+}
+function playSound(sound) {
+	for (var i=0;i<channels.length;i++) {
+		date = new Date();
+		if (channels[i]['finished'] < date.getTime()) { //if channel finished
+			channels[i]['finished'] = date.getTime() + document.getElementById(sound).duration*1000
+			channels[i]['channel'].src = document.getElementById(sound).src;
+			channels[i]['channel'].load();
+			channels[i]['channel'].play();
+		}
+	}
+}
+//Initialise game variables
+var running = true;
+var starCount = 50; //number of stars
+var size = 10; //Size of particle
+var gametime = 0;
+var score = 0;
+var energy = 50;
+var levelNo = 0; //0th level is menu
+var levelComplete = false;
+var levelFailed = false;
+var inMenu = true;
+
+//Adaptive variables
+var particleSpeed;
+var targetSpeed;
+var targetHP;
+var spawnInterval = 50; //how often to spawn enemies
+var powerupInterval = 120; //how often to give powerups
+
+//Lists of things
+var stars = new Array();
+var particles = new Array();
+var targets = new Array();
+var bullets = new Array();
+var powerups = new Array();
+
+//Objects
+function Star(x) {
+	this.x = x;
+	this.y = Math.random()*canvas.height;
+	this.xvel = 10+Math.random()*10;
+	this.size = Math.random()*4;
+}
+function Particle(x,y,xvel,yvel,type) { //Basic enemies - kill player upon contact, destroyed by bullets
+	this.x = x;
+	this.y = y;
+	this.xvel = xvel;
+	this.yvel = yvel;
+	this.time = 0; //Time since particle spawned
+	this.type = type;
+}
+function Bullet(x,y,type) { //Bullets fired by player
+	this.x = x;
+	this.y = y;
+	this.type = type;
+}
+function Target(x) { //Enemy that needs a certain number of hits to die
+	this.x = x;
+	this.y = 0;
+	this.hits = 0;
+}
+function Player() {
+	this.x = 0;
+	this.y = 0;
+	this.hp = 100;
+	this.goingDown = false;
+	this.goingUp = false;
+	this.goingRight = false;
+	this.goingLeft = false;
+	this.powerup = 0;
+	this.powerupTime = 0;
+}
+function Powerup(x,y,type) {
+	this.x = x;
+	this.x = x;
+	this.y = y;
+	this.type = type;
+}
+player = new Player();
+//Set up canvas and stuff so we can draw
+var canvas = document.getElementById("myCanvas");
+var context = canvas.getContext("2d");
+context.strokeStyle = "blue"; //wtf?
+context.fillStyle="black";
+canvas.onmousemove = getPosition;
+//Set up inputs
+canvas.addEventListener("click", shoot, false);
+canvas.addEventListener("keydown",keyPressed,false);
+canvas.addEventListener("keyup",keyUp,false);
+
+function keyPressed(e) {
+	console.log("key pressed");
+	if (e.keyCode==37) {
+		player.goingLeft = true;
+	}
+	if (e.keyCode==38) {
+		player.goingUp = true;
+	}
+	if (e.keyCode==39) {
+		player.goingRight = true;
+	}
+	if (e.keyCode==40) {
+		player.goingDown = true;
+	}
+	if (e.keyCode==32) { //Space bar
+		if (inMenu) {
+			inMenu = false;
+			if (levelNo==0) {
+				levelNo++;
+			}
+			//Save scores here
+			energy = 50; //Need to rest energy for next level
+			score = 0; ///Reset score for next level
+		} else {
+			shoot();
+		}
+	}
+}
+function keyUp(e) {
+	if (e.keyCode==37) {
+		player.goingLeft = false;
+	}
+	if (e.keyCode==38) {
+		player.goingUp = false;
+	}
+	if (e.keyCode==39) {
+		player.goingRight = false;
+	}
+	if (e.keyCode==40) {
+		player.goingDown = false;
+	}
+}
+
+function makeParticle() {
+	particles.push(new Particle(canvas.width,20+(Math.random()*(canvas.height-19)), -(5+(Math.random()*6)),0),0);
+}
+function makePowerup() {
+	powerups.push(new Powerup(Math.random()*canvas.width,20+(Math.random()*(canvas.height-19)),0));
+}
+function makeStar() {
+	stars.push(new Star(canvas.width));
+}
+function makeTarget() {
+	targets.push(new Target(canvas.width, Math.random()*canvas.height));
+}
+
+function shoot(e) { //Called when player clicks
+	var x = player.x;
+	var y = player.y;
+	console.log("shoot! ",x," ",y);
+	if (!inMenu)
+		bullets.push(new Bullet(x, y,1));
+}
+
+var t = setInterval("update()", 1000/60); //Essentially sets framerate
+
+//Set up stars
+for (var i=0;i<starCount;i++) {
+	stars.push(new Star(Math.random()*canvas.width));
+}
+
+function draw() {
+	//Draw background
+	context.fillStyle = "rgba(20,20,20,0.4)";
+	context.fillRect(0,0,canvas.width, canvas.height);
+	//Draw stars
+	for (var i=0;i<stars.length;i++) {
+		context.fillStyle="white";
+		context.beginPath();
+		context.arc(stars[i].x,stars[i].y,stars[i].size,0, Math.PI*2, true);
+		context.closePath();
+		context.fill();
+	}
+	//Draw targets
+	for (var i=0;i<targets.length;i++) {
+		//colour = "darkcyan";
+		colour = "rgba("+(255-(i*32))+",128,"+(i*32)+", "+(1-(targets[i].hits*0.1))+")";
+		context.fillStyle=colour;
+		//context.fillRect(targets[i].x-(canvas.width/8), 0, canvas.width/4, 10);
+		context.fillRect(targets[i].x-75, 0, 150, 10);
+	}
+	//Draw particles
+	var size;
+	for (var i =0; i< particles.length;i++) {
+		//colour = "rgba("+String(particles[i].time%300)+",0,0,0.5)";
+		colour = "Darkorange";
+		context.fillStyle=colour;
+		context.beginPath();
+		context.arc(particles[i].x,particles[i].y, 24, 0, Math.PI*2, true); //size should change over time
+		context.closePath();
+		context.fill();
+	}
+	//Draw player
+	context.fillStyle="red";
+	context.fillRect(player.x,player.y,20,10);
+	//Draw Bullets
+	for (var i=0;i<bullets.length;i++) {
+	      context.fillStyle="purple";
+	      context.beginPath();
+	      context.arc(bullets[i].x,bullets[i].y, 6, 0, Math.PI*2, true);
+	      context.closePath();
+	      context.fill();
+	}
+	//Draw powerups
+	for (var i=0; i<powerups.length;i++) {
+		context.fillStyle="green";
+		context.fillRect(powerups[i].x, powerups[i].y, 20,20);
+	}
+	//Print scores
+	document.getElementById("scores").innerHTML="Score:\t"+score+"\nEnergy:\t"+energy;
+	if (energy<0) {
+		inMenu = true;
+		document.getElementById("scores").innerHTML="High score: "+score+"\tRefresh page to try again!";
+	}
+}
+
+function update() {
+	draw();
+	if (inMenu) {
+		context.fillStyle="rgba(0,0,0,0.5)"; //Darken background
+		context.fillRect(0,0,canvas.width, canvas.height);
+		context.fillStyle="rgba(128,128,128,0.8)";
+		context.fillRect(0,canvas.height/3,canvas.width, canvas.height/3);
+		context.fillStyle="black";
+		context.font="50px sans-serif";
+		context.textBaseline="middle";
+		if (levelNo==0) {
+			context.fillText("Press Space to start",canvas.width/9, canvas.height/2);
+		} else {
+			context.fillText("You died D:",canvas.width/4, canvas.height/2);
+		}
+	}
+	else {
+		gametime++; //Update time
+		//Make new enemies
+		if (gametime%spawnInterval==0) {
+			makeParticle();
+		}
+		
+		//Make new powerups
+		if (gametime%powerupInterval==0) {
+			if (Math.random()<0.5) { //50% chance of powerup
+				makePowerup();
+			}
+		}
+		var remove = false;
+		//Move the player for keyboard input
+		if (player.goingUp) {
+			player.y -= 6;
+		}
+		if (player.goingDown) {
+			player.y += 6;
+		}
+		if (player.goingLeft) {
+			player.x -= 6;
+		}
+		if (player.goingRight) {
+			player.x += 6;
+		}
+		
+		//Keep player within bounds of canvas
+		if (player.x<0) {player.x=0;}
+		if (player.x>canvas.width) {player.x=canvas.width;}
+		if (player.y<0) {player.y=0;}
+		if (player.y>canvas.height) {player.y=canvas.height;}
+		
+		//Stars
+		for (var i=0;i<stars.length;i++) {
+			stars[i].x -= stars[i].xvel;
+			if (stars[i].x < 0) {
+				stars.splice(i,1);
+				makeStar();
+			}
+		}
+		//Check for collisions with powerups
+		for (var j=0;j<powerups.length;j++) {
+			if (boxCollision(player.x, player.y, 20,20, powerups[j].x-10, powerups[j].y-10,20,20)) {
+				powerups.splice(j,1);
+				energy+=10;
+			}
+		}
+		//Particles
+		for (var i=0;i<particles.length;i++) {
+			remove = false;
+			particles[i].x += (particles[i].xvel*1); // Move particles
+			particles[i].y += (particles[i].yvel*1);
+			particles[i].time += 20;
+			//remove offscreen particles
+			if (particles[i].x>canvas.width) {
+				remove = true;
+			}
+			else if (particles[i].x<0) {
+				remove = true;
+			}
+			if (particles[i].y<0) {
+				for (var j=0;j<targets.length;j++) {
+					if (particles[i].x<targets[j].x+(canvas.width/8) && particles[i].x>targets[j].x-(canvas.width/8)) {
+						score++;
+						energy++;
+						targets[j].hits++;
+						console.log("Hit!");
+						break;
+					}
+				}
+				remove = true;
+			}
+			
+			//Check for collisions with bullets
+			for (var j=0;j<bullets.length;j++) {
+				if (boxCollision(particles[i].x-12,particles[i].y-12,48,48,bullets[j].x-3,bullets[j].y-3,12,12)) {
+					bullets.splice(j,1);
+					remove=true;
+					score += 100;
+				}
+			}
+			//Collision with player
+			if (boxCollision(player.x,player.y,20,10,particles[i].x-12,particles[i].y-12,48,48)) {
+				energy=0;
+			}
+			if (remove) {particles.splice(i,1); energy--;}
+		}
+		//Bullets
+		for (var i=0;i<bullets.length;i++) {
+			  remove = false;
+			  if (bullets[i].type==1) {
+				bullets[i].x += 20;
+			  }
+			  if (bullets[i].x>canvas.width) {
+				remove = true;
+			  }
+			  if (remove) {
+				bullets.splice(i,1);
+			  }
+		}
+		
+		//if (energy<0) {running=false;}
+	}
+}
+
+function getPosition(e) {
+	var x;
+	var y;
+	if (e.pageX || e.pageY) { //pageX and pageY are relative to the window
+		x = e.pageX;
+		y = e.pageY;
+	} else { //sort out offsets and stuff
+		x = e.clientX+document.body.scrollLeft + document.documentElement.scrollLeft;
+		y = e.clientY+document.body.scrollTop + document.documentElement.scrollTop;
+	}
+	x -=canvas.offsetLeft;
+	y -= canvas.offsetTop;
+	player.x=x;
+	player.y=y;
+	return [x,y];
+}
+
+function boxCollision(x,y,w,h,x2,y2,w2,h2 ) { //Top left, width, height corners of boxes
+	if ((x < x2+w) && (x+h>x2) && (y<y2+h2) && (y+h>y2)) {
+		return true;
+	}
+	else {return false;}
+}
+
+</script>
+</body>
+</head>
+</html>
