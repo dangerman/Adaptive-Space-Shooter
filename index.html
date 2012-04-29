@@ -5,7 +5,7 @@ Game
 <body>
 <p>Use arrow keys or mouse to move and click or press space to shoot
 </p>
-<canvas id = "myCanvas" width="600" height="500" tabindex="1">
+<canvas id = "myCanvas" width="700" height="400" tabindex="1">
 <!-- Need to set the tab index so it gets keyboard inputs -->
 </canvas>
 <p id = "scores">
@@ -44,6 +44,8 @@ var bulletImg = new Image();
 bulletImg.src = "Bullet.png";
 var enemyImg1 = new Image();
 enemyImg1.src = "EasyEnemy.png";
+var enemyImg2 = new Image();
+enemyImg2.src = "MediumEnemy.png";
 //Initialise game variables
 var running = true;
 var starCount = 50; //number of stars
@@ -52,6 +54,7 @@ var gametime = 0;
 var score = 0;
 var energy = 50;
 var levelNo = 0; //0th level is menu
+var levelKills = 0;
 var levelComplete = false;
 var levelFailed = false;
 var inMenu = true;
@@ -149,10 +152,9 @@ function keyPressed(e) {
 	if (e.keyCode==32) { //Space bar
 		if (inMenu) {
 			inMenu = false;
-			if (levelNo==0) {
-				levelNo++;
-				document.getElementById("status").innerHTML="Level: "+levelNo+"</br>Enemy speed: "+particleSpeed;
-			}
+			levelNo++;
+			document.getElementById("status").innerHTML="Level: "+levelNo+"</br>Enemy speed: "+particleSpeed;
+			levelKills = 0;
 			//Save scores here
 			energy = 50; //Need to rest energy for next level
 			score = 0; ///Reset score for next level
@@ -244,7 +246,7 @@ function draw() {
 	}
 	//Draw player
 	context.fillStyle="red";
-	context.drawImage(playerImg, player.x, player.y-10,40,20);
+	context.drawImage(playerImg, player.x, player.y-10,40,40);
 	context.fillRect(player.x,player.y,20,10);
 	//Draw Bullets
 	for (var i=0;i<bullets.length;i++) {
