@@ -36,6 +36,14 @@ function playSound(sound) {
 		}
 	}
 }
+//Set up images
+var playerImg = new Image();
+playerImg.src = "PlayerShip.png";
+var playerImg2 = new Image();
+var bulletImg = new Image();
+bulletImg.src = "Bullet.png";
+var enemyImg1 = new Image();
+enemyImg1.src = "EasyEnemy.png";
 //Initialise game variables
 var running = true;
 var starCount = 50; //number of stars
@@ -74,7 +82,7 @@ var powerups = new Array();
 function Star(x) {
 	this.x = x;
 	this.y = Math.random()*canvas.height;
-	this.xvel = 10+Math.random()*10;
+	this.xvel = 5+Math.random()*5;
 	this.size = Math.random()*3;
 }
 function Particle(x,y,xvel,yvel,type) { //Basic enemies - kill player upon contact, destroyed by bullets
@@ -224,6 +232,9 @@ function draw() {
 	var size;
 	for (var i =0; i< particles.length;i++) {
 		//colour = "rgba("+String(particles[i].time%300)+",0,0,0.5)";
+		if (particles[i].type==1) {
+			context.drawImage(enemyImg1, particles[i].x-36, particles[i].y-24,80,50);
+		}
 		colour = "Darkorange";
 		context.fillStyle=colour;
 		context.beginPath();
@@ -233,14 +244,16 @@ function draw() {
 	}
 	//Draw player
 	context.fillStyle="red";
+	context.drawImage(playerImg, player.x, player.y-10,40,20);
 	context.fillRect(player.x,player.y,20,10);
 	//Draw Bullets
 	for (var i=0;i<bullets.length;i++) {
-	      context.fillStyle="purple";
-	      context.beginPath();
-	      context.arc(bullets[i].x,bullets[i].y, 6, 0, Math.PI*2, true);
-	      context.closePath();
-	      context.fill();
+		context.drawImage(bulletImg, bullets[i].x, bullets[i].y-15,50,30);
+	      //context.fillStyle="purple";
+	      //context.beginPath();
+	      //context.arc(bullets[i].x,bullets[i].y, 6, 0, Math.PI*2, true);
+	      //context.closePath();
+	      //context.fill();
 	}
 	//Draw powerups
 	for (var i=0; i<powerups.length;i++) {
@@ -249,7 +262,7 @@ function draw() {
 	}
 	//Print scores
 	document.getElementById("scores").innerHTML="Score:\t"+score+"\nEnergy:\t"+energy;
-	if (energy<0) {
+	if (energy<=0) {
 		inMenu = true;
 		document.getElementById("scores").innerHTML="High score: "+score+"\tRefresh page to try again!";
 	}
@@ -339,7 +352,7 @@ function update() {
 			else if (particles[i].x<0) { //Player has missed particle
 				remove = true;
 				misses.particle1++;
-				document.getElementById("stats").innerHTML="Hits: "+hits.particle1+"</br> Missesed enemies: "+misses.particle1+"</br>Overall Accuracy: "+(bulletHits/bulletHits+bulletMisses);
+				updateStats();
 			}
 			if (particles[i].y<0) { //Not sure this bit is needed at all
 				for (var j=0;j<targets.length;j++) {
@@ -362,7 +375,7 @@ function update() {
 					score += 100;
 					hits.particle1++;
 					bulletHits++;
-					document.getElementById("stats").innerHTML="Hits: "+hits.particle1+"</br> Missed enemies: "+misses.particle1+"</br>Overall Accuracy: "+bulletHits/(bulletHits+bulletMisses);
+					updateStats();
 				}
 			}
 			//Collision with player
@@ -380,8 +393,8 @@ function update() {
 			  if (bullets[i].x>canvas.width) {
 				remove = true;
 				bulletMisses++;
-				document.getElementById("stats").innerHTML="Hits: "+hits.particle1+"</br> Missed enemies: "+misses.particle1+"</br>Overall Accuracy: "+bulletHits/(bulletHits+bulletMisses);
-			  }
+				updateStats();
+				}
 			  if (remove) {
 				bullets.splice(i,1);
 			  }
@@ -413,6 +426,10 @@ function boxCollision(x,y,w,h,x2,y2,w2,h2 ) { //Top left, width, height corners 
 		return true;
 	}
 	else {return false;}
+}
+
+function updateStats() {
+	document.getElementById("stats").innerHTML="Hits: "+hits.particle1+"</br> Missesed enemies: "+misses.particle1+"</br>Overall Accuracy: "+(bulletHits/bulletHits+bulletMisses);
 }
 
 </script>
