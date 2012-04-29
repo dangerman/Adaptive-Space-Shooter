@@ -12,6 +12,8 @@ Game
 </p>
 <p id = "stats">
 </p>
+<p id = "status">
+</p>
 <script type="text/javascript">
 //Remove curosr
 document.getElementById("myCanvas").style.cursor = "none";
@@ -47,11 +49,19 @@ var levelFailed = false;
 var inMenu = true;
 
 //Adaptive variables
-var particleSpeed;
+var particleSpeed = 1;
 var targetSpeed;
 var targetHP;
 var spawnInterval = 50; //how often to spawn enemies
 var powerupInterval = 120; //how often to give powerups
+
+//Storing stats
+hits = new Object();
+hits.particle1 = 0;
+misses = new Object();
+misses.particle1 = 0;
+var bulletHits = 0;
+var bulletMisses = 0;
 
 //Lists of things
 var stars = new Array();
@@ -65,7 +75,7 @@ function Star(x) {
 	this.x = x;
 	this.y = Math.random()*canvas.height;
 	this.xvel = 10+Math.random()*10;
-	this.size = Math.random()*4;
+	this.size = Math.random()*3;
 }
 function Particle(x,y,xvel,yvel,type) { //Basic enemies - kill player upon contact, destroyed by bullets
 	this.x = x;
@@ -133,6 +143,7 @@ function keyPressed(e) {
 			inMenu = false;
 			if (levelNo==0) {
 				levelNo++;
+				document.getElementById("status").innerHTML="Level: "+levelNo+"</br>Enemy speed: "+particleSpeed;
 			}
 			//Save scores here
 			energy = 50; //Need to rest energy for next level
@@ -158,7 +169,11 @@ function keyUp(e) {
 }
 
 function makeParticle() {
-	particles.push(new Particle(canvas.width,20+(Math.random()*(canvas.height-19)), -(5+(Math.random()*6)),0),0);
+	if (Math.random()>0.5) {
+		particles.push(new Particle(canvas.width,Math.random()*canvas.height, -(5+(Math.random()*6)),0,0));
+	} else {
+		particles.push(new Particle(canvas.width,Math.random()*canvas.height, -(5+(Math.random()*6)),0,1));
+	}
 }
 function makePowerup() {
 	powerups.push(new Powerup(Math.random()*canvas.width,20+(Math.random()*(canvas.height-19)),0));
@@ -308,17 +323,25 @@ function update() {
 		//Particles
 		for (var i=0;i<particles.length;i++) {
 			remove = false;
-			particles[i].x += (particles[i].xvel*1); // Move particles
-			particles[i].y += (particles[i].yvel*1);
-			particles[i].time += 20;
+			if (particles[i].type==0) { //Move type 0 particles -> horizontal
+				particles[i].x += (particles[i].xvel*particleSpeed);
+				particles[i].y += (particles[i].yvel*particleSpeed);
+			}
+			if (particles[i].type==1) { //Move type 1 particles ->
+				particles[i].x += (particles[i].xvel*particleSpeed);
+				particles[i].y += (Math.sin(particles[i].time/10)*10*particleSpeed);
+			}
+			particles[i].time++;
 			//remove offscreen particles
 			if (particles[i].x>canvas.width) {
 				remove = true;
 			}
-			else if (particles[i].x<0) {
+			else if (particles[i].x<0) { //Player has missed particle
 				remove = true;
+				misses.particle1++;
+				document.getElementById("stats").innerHTML="Hits: "+hits.particle1+"</br> Missesed enemies: "+misses.particle1+"</br>Overall Accuracy: "+(bulletHits/bulletHits+bulletMisses);
 			}
-			if (particles[i].y<0) {
+			if (particles[i].y<0) { //Not sure this bit is needed at all
 				for (var j=0;j<targets.length;j++) {
 					if (particles[i].x<targets[j].x+(canvas.width/8) && particles[i].x>targets[j].x-(canvas.width/8)) {
 						score++;
@@ -337,6 +360,9 @@ function update() {
 					bullets.splice(j,1);
 					remove=true;
 					score += 100;
+					hits.particle1++;
+					bulletHits++;
+					document.getElementById("stats").innerHTML="Hits: "+hits.particle1+"</br> Missed enemies: "+misses.particle1+"</br>Overall Accuracy: "+bulletHits/(bulletHits+bulletMisses);
 				}
 			}
 			//Collision with player
@@ -353,6 +379,8 @@ function update() {
 			  }
 			  if (bullets[i].x>canvas.width) {
 				remove = true;
+				bulletMisses++;
+				document.getElementById("stats").innerHTML="Hits: "+hits.particle1+"</br> Missed enemies: "+misses.particle1+"</br>Overall Accuracy: "+bulletHits/(bulletHits+bulletMisses);
 			  }
 			  if (remove) {
 				bullets.splice(i,1);
