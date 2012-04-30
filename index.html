@@ -54,6 +54,8 @@ var pickUp1 = new Image();
 pickUp1.src = "Life.png";
 var pickUpCue1 = new Image();
 pickUpCue1.src = "PickUp.png";
+var portalImg = new Image();
+portalImg.src = "Portal.png";
 //Initialise game variables
 var running = true;
 var starCount = 50; //number of stars
@@ -75,6 +77,7 @@ var targetHP;
 var spawnInterval = 50; //how often to spawn enemies
 var powerupInterval = 120; //how often to give powerups
 var enemyBulletFreq = 30;
+var levelKillThreshold = 2; //Kills needed to pass to next level
 
 //Storing stats
 hits = new Object();
@@ -139,6 +142,11 @@ var context = canvas.getContext("2d");
 context.strokeStyle = "blue"; //wtf?
 context.fillStyle="black";
 canvas.onmousemove = getPosition;
+//Portal object
+portal = new Object();
+portal.x = canvas.width-150;
+portal.y = canvas.height/2;
+portal.on = false;
 //Set up inputs
 canvas.addEventListener("click", shoot, false);
 canvas.addEventListener("keydown",keyPressed,false);
@@ -161,10 +169,14 @@ function keyPressed(e) {
 	if (e.keyCode==32) { //Space bar
 		if (inMenu) {
 			inMenu = false;
+			//save high scores
+			//update Player model
+			//generate level variables
 			levelNo++;
 			document.getElementById("status").innerHTML="Level: "+levelNo+"</br>Enemy speed: "+particleSpeed;
 			levelKills = 0;
-			//Save scores here
+			levelComplete = false;
+			portal.on = false;
 			energy = 50; //Need to rest energy for next level
 			score = 0; ///Reset score for next level
 			missedPowerups = 0;
@@ -211,7 +223,7 @@ function makeTarget() {
 function shoot(e) { //Called when player clicks
 	var x = player.x+74;
 	var y = player.y+36;
-	console.log("shoot! ",x," ",y);
+	//console.log("shoot! ",x," ",y);
 	if (!inMenu)
 		bullets.push(new Bullet(x, y,1));
 }
@@ -289,12 +301,17 @@ function draw() {
 			context.globalAlpha = (powerups[i].time / 600);
 			context.drawImage(pickUp1, powerups[i].x, powerups[i].y,29,25);
 			context.globalAlpha = 1;
-			if (powerups[i].time < 301 && missedPowerups > 4) {
+			if (powerups[i].time < 301 && missedPowerups > 2) {
 			    context.globalAlpha = 1 - (powerups[i].time / 300);
 			    context.drawImage(pickUpCue1, powerups[i].x - 15, powerups[i].y - 20,57,8);
 			    context.globalAlpha = 1;
+				console.log("pickupcue displayed");
 			}
 		}         
+	}
+	//Draw portal
+	if (portal.on) {
+		context.drawImage(portalImg, portal.x, portal.y);
 	}
 	//Print scores
 	document.getElementById("scores").innerHTML="Score:\t"+score+"\nEnergy:\t"+energy;
@@ -316,6 +333,8 @@ function update() {
 		context.textBaseline="middle";
 		if (levelNo==0) {
 			context.fillText("Press Space to start",canvas.width/9, canvas.height/2);
+		} else if (levelComplete){
+			context.fillText("Level complete!",canvas.width/4, canvas.height/2);
 		} else {
 			context.fillText("You died D:",canvas.width/4, canvas.height/2);
 		}
@@ -333,7 +352,11 @@ function update() {
 				makePowerup();
 			}
 		}
-		var remove = false;
+		if (levelKills>=levelKillThreshold) {
+			//Create portal
+			portal.on = true;
+		}
+		var remove = false; //Not sure this line is needed...
 		//Move the player for keyboard input
 		if (player.goingUp) {
 			player.y -= 6;
@@ -407,7 +430,7 @@ function update() {
 			if (particles[i].x>canvas.width) {
 				remove = true;
 			}
-			else if (particles[i].x<0) { //Player has missed particle
+			else if (particles[i].x<0) { //Player has missed enemy
 				remove = true;
 				misses.particle1++;
 				updateStats();
@@ -435,6 +458,7 @@ function update() {
 						hits.particle1++;
 						bulletHits++;
 						updateStats();
+						levelKills++;
 					}
 				}
 				else if (particles[i].type == 0) {
@@ -445,6 +469,7 @@ function update() {
 						hits.particle1++;
 						bulletHits++;
 						updateStats();
+						levelKills++;
 					}
 				}
 				else if (particles[i].type == 2) {
@@ -455,6 +480,7 @@ function update() {
 						hits.particle1++;
 						bulletHits++;
 						updateStats();
+						levelKills++;
 					}
 				}
 			}
@@ -500,7 +526,11 @@ function update() {
 				bullets.splice(i,1);
 			  }
 		}
-		
+		//Collisions with portal
+		if (boxCollision(player.x+45,player.y+5,88,50,portal.x+5,portal.y+5,100,150)) {
+			levelComplete = true;
+			inMenu = true;
+		}
 		//if (energy<0) {running=false;}
 	}
 }
