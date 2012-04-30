@@ -1,19 +1,236 @@
-<html>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<style type="text/css">
+
+* {
+	margin: 0;
+	padding: 0;
+}
+
+a img {
+	border: none;
+}
+
+a:link {color: #b8b8b8}
+a:visited {color: #b8b8b8}
+a:active {color: #b8b8b8}
+a:hover {color: #1a239f}
+
+p {
+	margin-top: 5px;
+	margin-left: 14px;
+	font-family:Arial, Helvetica, sans-serif;
+	color: #ffffff;
+	font-size:24px;
+	font-weight:bold;
+}
+
+h1 {
+	margin-top: 5px;
+	margin-left: 14px;
+	font-family:Arial, Helvetica, sans-serif;
+	color: #b8b8b8;
+	font-size:16px;
+	font-weight:normal;
+	text-align: center;
+}
+
+html, body {
+	background-image:url(StarField.jpg);
+	background-attachment:fixed;
+	background-repeat:repeat;
+	height:100%;
+}
+
+#footer {
+    height: 25px; /* Define height of the footer */
+    position: absolute;
+    bottom: 0; /* Sit it on the bottom */
+    left: 0;
+    width: 100%; /* As wide as it's allowed */
+	text-align: center;
+	font-size: 16px;
+	font-family: Arial, Helvetica, sans-serif;
+	color: #b8b8b8;
+}
+
+#footerWedge {
+	width: 1px;
+	height: 10px;
+	clear: both;
+}
+
+#container {
+	background-color: rgba(255,255,255,0.4);
+	width: 950px;
+	margin: 0 auto;
+	position: relative;
+	height: auto !important;
+	min-height: 100%;
+	height: 100%;
+}
+
+#leftSide {
+	width:40px;
+	background-image:url(leftSide.png);
+	background-repeat:repeat-y;
+	float:left;
+	height:100%;
+	position:absolute;
+	left: -40px;
+}
+
+#rightSide {
+	width:40px;
+	background-image:url(rightSide.png);
+	background-repeat:repeat-y;
+	float:right;
+	height:100%;
+	position:absolute;
+	left:950px;
+}
+
+#content {
+	margin-top: -10px;
+	padding-bottom:25px;
+}
+
+#header {
+	margin-top:10px;
+	margin-left:30px;
+	padding-top: 10px;
+	height: 120px;
+	width: 865px;
+}
+
+#header img {
+	float:left;
+}
+
+#spacer {
+	float:left;
+	width:10px;
+	height:64px;
+}
+
+#game {
+	width: 900px;
+	height: 70px;
+	margin-left: 25px;
+	margin-top: 0px;
+	margin-bottom: 15px;
+	border: solid 1px #b8b8b8;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	 -khtml-border-radius: 5px;
+	border-radius: 5px;
+	background-color: rgba(0,0,0,0.3);
+}
+
+#scores {
+	width: 900px;
+	height: 70px;
+	margin-left: 25px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	border: solid 1px #b8b8b8;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	 -khtml-border-radius: 5px;
+	border-radius: 5px;
+	background-color: rgba(0,0,0,0.3);
+}
+
+#myCanvas {
+	width: 900px;
+	height: 450px;
+	margin-left: 25px;
+	margin-top: 0px;
+	border: solid 1px #b8b8b8;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	 -khtml-border-radius: 5px;
+	border-radius: 5px;
+}
+
+</style>
+
+<!--[if IE]>
+
+<style type="text/css">
+
+
+#container {
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,endColorstr=#99000000);
+	-ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,endColorstr=#99000000);
+	width: 950px;
+	margin: 0 auto;
+	position: relative;
+	height: auto !important;
+	min-height: 100%;
+	height: 100%;
+}
+
+#content {
+	margin-top: -10px;
+	padding-bottom: 25px;
+}
+
+#game {
+	width: 900px;
+	height: 70px;
+	margin-left: 25px;
+	margin-top: 0px;
+	margin-bottom: 15px;
+	border: solid 1px #b8b8b8;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3000000,endColorstr=#b3000000);
+	-ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3000000,endColorstr=#b3000000);
+}
+
+#scores {
+	width: 900px;
+	height: 70px;
+	margin-left: 25px;
+	margin-top: 15px;
+	margin-bottom: 15px;
+	border: solid 1px #b8b8b8;
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3000000,endColorstr=#b3000000);
+	-ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3000000,endColorstr=#b3000000);
+}
+
+</style>
+
+<![endif]-->
+
 <head>
-Game
-</br>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=9" />
+<title>Adaptive Space Shooter</title>
+</head>
+
 <body>
-<p>Use arrow keys or mouse to move and click or press space to shoot
-</p>
-<canvas id = "myCanvas" width="900" height="450" tabindex="1">
-<!-- Need to set the tab index so it gets keyboard inputs -->
-</canvas>
-<p id = "scores">
-</p>
-<p id = "stats">
-</p>
-<p id = "status">
-</p>
+<div id="container">
+<div id="content">
+	<div id="leftSide"></div>
+ 	<div id="rightSide"></div>
+	<div id="header"><img src="Title.png" />
+	
+	<a href="http://github.com/you"><img style="position: absolute; top: 0; left: 0; border: 0; " src="https://a248.e.akamai.net/camo.github.com/6429057dfef9e98189338d22e7f6646c6694f032/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></a>
+	
+	</div>
+    <div id="game">
+    <p>INSTRUCTIONS:<br/>Use arrow keys or mouse to move and click or press space to shoot
+    </p></div>
+    <canvas id = "myCanvas" width="900" height="450" tabindex="1">
+    <!-- Need to set the tab index so it gets keyboard inputs -->
+    </canvas>
+    <p id = "scores">
+    </p>
+    <p id = "stats">
+    </p>
+    <p id = "status">
+    </p>
 <script type="text/javascript">
 //Remove curosr
 document.getElementById("myCanvas").style.cursor = "none";
@@ -40,6 +257,7 @@ function playSound(sound) {
 var playerImg = new Image();
 playerImg.src = "PlayerShip.png";
 var playerImg2 = new Image();
+playerImg2.src = "PlayerShip2.png";
 var bulletImg = new Image();
 bulletImg.src = "Bullet.png";
 var enemyBulletImg = new Image();
@@ -48,14 +266,16 @@ var enemyImg1 = new Image();
 enemyImg1.src = "EasyEnemy.png";
 var enemyImg2 = new Image();
 enemyImg2.src = "MediumEnemy.png";
+var enemyImg2b = new Image();
+enemyImg2b.src = "MediumEnemy2.png";
 var enemyImg3 = new Image();
 enemyImg3.src = "HardEnemy.png";
+var enemyImg3b = new Image();
+enemyImg3b.src = "HardEnemy2.png";
 var pickUp1 = new Image();
 pickUp1.src = "Life.png";
 var pickUpCue1 = new Image();
 pickUpCue1.src = "PickUp.png";
-var portalImg = new Image();
-portalImg.src = "Portal.png";
 //Initialise game variables
 var running = true;
 var starCount = 50; //number of stars
@@ -77,7 +297,6 @@ var targetHP;
 var spawnInterval = 50; //how often to spawn enemies
 var powerupInterval = 120; //how often to give powerups
 var enemyBulletFreq = 30;
-var levelKillThreshold = 2; //Kills needed to pass to next level
 
 //Storing stats
 hits = new Object();
@@ -101,7 +320,7 @@ function Star(x) {
 	this.xvel = 5+Math.random()*5;
 	this.size = Math.random()*3;
 }
-function Particle(x,y,xvel,yvel,type) { //Basic enemies - kill player upon contact, destroyed by bullets
+function Particle(x,y,xvel,yvel,type, hp) { //Basic enemies - kill player upon contact, destroyed by bullets
 	this.x = x;
 	this.y = y;
 	this.xvel = xvel;
@@ -109,9 +328,10 @@ function Particle(x,y,xvel,yvel,type) { //Basic enemies - kill player upon conta
 	this.time = 0; //Time since particle spawned
 	this.type = type;
 	this.bulletSpawn = bulletSpawn;
+	this.hp = hp;
 }
 function bulletSpawn() {
-	particles.push(new Particle(this.x,this.y, -20,0,3));
+	particles.push(new Particle(this.x,this.y, -20,0,3, 1000));
 }
 function Bullet(x,y,type) { //Bullets fired by player
 	this.x = x;
@@ -142,11 +362,6 @@ var context = canvas.getContext("2d");
 context.strokeStyle = "blue"; //wtf?
 context.fillStyle="black";
 canvas.onmousemove = getPosition;
-//Portal object
-portal = new Object();
-portal.x = canvas.width-150;
-portal.y = canvas.height/2;
-portal.on = false;
 //Set up inputs
 canvas.addEventListener("click", shoot, false);
 canvas.addEventListener("keydown",keyPressed,false);
@@ -169,14 +384,10 @@ function keyPressed(e) {
 	if (e.keyCode==32) { //Space bar
 		if (inMenu) {
 			inMenu = false;
-			//save high scores
-			//update Player model
-			//generate level variables
 			levelNo++;
 			document.getElementById("status").innerHTML="Level: "+levelNo+"</br>Enemy speed: "+particleSpeed;
 			levelKills = 0;
-			levelComplete = false;
-			portal.on = false;
+			//Save scores here
 			energy = 50; //Need to rest energy for next level
 			score = 0; ///Reset score for next level
 			missedPowerups = 0;
@@ -203,11 +414,11 @@ function keyUp(e) {
 function makeParticle(isBullet, enemy) {
 	var rand = Math.random();
 	if (rand > 0.66) {
-		particles.push(new Particle(canvas.width,Math.random()*canvas.height, -(5+(Math.random()*6)),0,0));
+		particles.push(new Particle(canvas.width,Math.random()*canvas.height, -(5+(Math.random()*6)),0,0,1));
 	} else if (rand > 0.33) {
-		particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.7), -(5+(Math.random()*6)),0,1));
+		particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.7), -(5+(Math.random()*6)),0,1,1));
 	} else {
-		particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.5), -(5+(Math.random()*6)),0,2));
+		particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.5), -(5+(Math.random()*6)),0,2,100));
 	}
 }
 function makePowerup() {
@@ -223,7 +434,7 @@ function makeTarget() {
 function shoot(e) { //Called when player clicks
 	var x = player.x+74;
 	var y = player.y+36;
-	//console.log("shoot! ",x," ",y);
+	console.log("shoot! ",x," ",y);
 	if (!inMenu)
 		bullets.push(new Bullet(x, y,1));
 }
@@ -263,10 +474,25 @@ function draw() {
 			context.drawImage(enemyImg1, particles[i].x-36, particles[i].y-24,87,37.5);
 		}
 		else if (particles[i].type==0) {
-			context.drawImage(enemyImg2, particles[i].x-36, particles[i].y-24,94,48);
+			if (gametime % 6 == 0 || gametime % 6 == 1 || gametime % 6 == 2)
+				context.drawImage(enemyImg2, particles[i].x-36, particles[i].y-24,94,48);
+			else
+				context.drawImage(enemyImg2b, particles[i].x-36, particles[i].y-24,94,48);
 		}
 		else if (particles[i].type==2) {
-			context.drawImage(enemyImg3, particles[i].x-36, particles[i].y-24,193,68);
+			if (gametime % 6 == 0 || gametime % 6 == 1 || gametime % 6 == 2)
+				context.drawImage(enemyImg3, particles[i].x-36, particles[i].y-24,193,68);
+			else
+				context.drawImage(enemyImg3b, particles[i].x-36, particles[i].y-24,193,68);
+			
+			if (particles[i].hp > 50)
+				context.fillStyle="lawngreen";
+			else if (particles[i].hp > 25)
+				context.fillStyle="orange";
+			else
+				context.fillStyle="red";
+				
+			context.fillRect(particles[i].x+40,particles[i].y - 30,particles[i].hp/2,4);
 		}
 		else if (particles[i].type==3) {
 			context.drawImage(enemyBulletImg, particles[i].x, particles[i].y,50,30);
@@ -280,7 +506,10 @@ function draw() {
 	}
 	//Draw player
 	//context.fillStyle="red";
-	context.drawImage(playerImg, player.x, player.y-10,88,62);
+	if (gametime % 6 == 0 || gametime % 6 == 1 || gametime % 6 == 2)
+		context.drawImage(playerImg, player.x, player.y-10,88,62);
+	else
+		context.drawImage(playerImg2, player.x, player.y-10,88,62);
 	//context.fillRect(player.x,player.y,88,40);
 	//Draw Bullets
 	for (var i=0;i<bullets.length;i++) {
@@ -301,17 +530,12 @@ function draw() {
 			context.globalAlpha = (powerups[i].time / 600);
 			context.drawImage(pickUp1, powerups[i].x, powerups[i].y,29,25);
 			context.globalAlpha = 1;
-			if (powerups[i].time < 301 && missedPowerups > 2) {
+			if (powerups[i].time < 301 && missedPowerups > 4) {
 			    context.globalAlpha = 1 - (powerups[i].time / 300);
 			    context.drawImage(pickUpCue1, powerups[i].x - 15, powerups[i].y - 20,57,8);
 			    context.globalAlpha = 1;
-				console.log("pickupcue displayed");
 			}
 		}         
-	}
-	//Draw portal
-	if (portal.on) {
-		context.drawImage(portalImg, portal.x, portal.y);
 	}
 	//Print scores
 	document.getElementById("scores").innerHTML="Score:\t"+score+"\nEnergy:\t"+energy;
@@ -333,8 +557,6 @@ function update() {
 		context.textBaseline="middle";
 		if (levelNo==0) {
 			context.fillText("Press Space to start",canvas.width/9, canvas.height/2);
-		} else if (levelComplete){
-			context.fillText("Level complete!",canvas.width/4, canvas.height/2);
 		} else {
 			context.fillText("You died D:",canvas.width/4, canvas.height/2);
 		}
@@ -352,11 +574,7 @@ function update() {
 				makePowerup();
 			}
 		}
-		if (levelKills>=levelKillThreshold) {
-			//Create portal
-			portal.on = true;
-		}
-		var remove = false; //Not sure this line is needed...
+		var remove = false;
 		//Move the player for keyboard input
 		if (player.goingUp) {
 			player.y -= 6;
@@ -430,7 +648,7 @@ function update() {
 			if (particles[i].x>canvas.width) {
 				remove = true;
 			}
-			else if (particles[i].x<0) { //Player has missed enemy
+			else if (particles[i].x<0) { //Player has missed particle
 				remove = true;
 				misses.particle1++;
 				updateStats();
@@ -458,7 +676,6 @@ function update() {
 						hits.particle1++;
 						bulletHits++;
 						updateStats();
-						levelKills++;
 					}
 				}
 				else if (particles[i].type == 0) {
@@ -469,18 +686,20 @@ function update() {
 						hits.particle1++;
 						bulletHits++;
 						updateStats();
-						levelKills++;
 					}
 				}
 				else if (particles[i].type == 2) {
 					if (boxCollision(particles[i].x+110,particles[i].y-10,193,40,bullets[j].x-3,bullets[j].y-3,12,12)) {
+						particles[i].hp = particles[i].hp - 25;
+						if (particles[i].hp < 1)
+						{
+						      remove=true;
+						}
 						bullets.splice(j,1);
-						remove=true;
 						score += 100;
 						hits.particle1++;
 						bulletHits++;
 						updateStats();
-						levelKills++;
 					}
 				}
 			}
@@ -526,11 +745,7 @@ function update() {
 				bullets.splice(i,1);
 			  }
 		}
-		//Collisions with portal
-		if (boxCollision(player.x+45,player.y+5,88,50,portal.x+5,portal.y+5,100,150)) {
-			levelComplete = true;
-			inMenu = true;
-		}
+		
 		//if (energy<0) {running=false;}
 	}
 }
@@ -547,7 +762,7 @@ function getPosition(e) {
 	}
 	x -=canvas.offsetLeft;
 	y -= canvas.offsetTop;
-	player.x=x-44;
+	player.x=x-44-(document.body.clientWidth/2)+450;
 	player.y=y-30;
 	return [x,y];
 }
@@ -564,6 +779,9 @@ function updateStats() {
 }
 
 </script>
+    <div id="footerWedge"></div>
+</div>
+<div id="footer">Adaptive Space Shooter</div>
+</div>
 </body>
-</head>
 </html>
