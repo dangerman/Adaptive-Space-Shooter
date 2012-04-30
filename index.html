@@ -5,7 +5,7 @@ Game
 <body>
 <p>Use arrow keys or mouse to move and click or press space to shoot
 </p>
-<canvas id = "myCanvas" width="600" height="500" tabindex="1">
+<canvas id = "myCanvas" width="900" height="450" tabindex="1">
 <!-- Need to set the tab index so it gets keyboard inputs -->
 </canvas>
 <p id = "scores">
@@ -42,8 +42,18 @@ playerImg.src = "PlayerShip.png";
 var playerImg2 = new Image();
 var bulletImg = new Image();
 bulletImg.src = "Bullet.png";
+var enemyBulletImg = new Image();
+enemyBulletImg.src = "EnemyBullet.png";
 var enemyImg1 = new Image();
 enemyImg1.src = "EasyEnemy.png";
+var enemyImg2 = new Image();
+enemyImg2.src = "MediumEnemy.png";
+var enemyImg3 = new Image();
+enemyImg3.src = "HardEnemy.png";
+var pickUp1 = new Image();
+pickUp1.src = "Life.png";
+var pickUpCue1 = new Image();
+pickUpCue1.src = "PickUp.png";
 //Initialise game variables
 var running = true;
 var starCount = 50; //number of stars
@@ -52,16 +62,19 @@ var gametime = 0;
 var score = 0;
 var energy = 50;
 var levelNo = 0; //0th level is menu
+var levelKills = 0;
 var levelComplete = false;
 var levelFailed = false;
 var inMenu = true;
+var missedPowerups = 0;
 
 //Adaptive variables
-var particleSpeed = 1;
+var particleSpeed = 0.5;
 var targetSpeed;
 var targetHP;
 var spawnInterval = 50; //how often to spawn enemies
 var powerupInterval = 120; //how often to give powerups
+var enemyBulletFreq = 30;
 
 //Storing stats
 hits = new Object();
@@ -92,16 +105,15 @@ function Particle(x,y,xvel,yvel,type) { //Basic enemies - kill player upon conta
 	this.yvel = yvel;
 	this.time = 0; //Time since particle spawned
 	this.type = type;
+	this.bulletSpawn = bulletSpawn;
+}
+function bulletSpawn() {
+	particles.push(new Particle(this.x,this.y, -20,0,3));
 }
 function Bullet(x,y,type) { //Bullets fired by player
 	this.x = x;
 	this.y = y;
 	this.type = type;
-}
-function Target(x) { //Enemy that needs a certain number of hits to die
-	this.x = x;
-	this.y = 0;
-	this.hits = 0;
 }
 function Player() {
 	this.x = 0;
@@ -116,9 +128,9 @@ function Player() {
 }
 function Powerup(x,y,type) {
 	this.x = x;
-	this.x = x;
 	this.y = y;
 	this.type = type;
+	this.time = 600;
 }
 player = new Player();
 //Set up canvas and stuff so we can draw
@@ -149,13 +161,13 @@ function keyPressed(e) {
 	if (e.keyCode==32) { //Space bar
 		if (inMenu) {
 			inMenu = false;
-			if (levelNo==0) {
-				levelNo++;
-				document.getElementById("status").innerHTML="Level: "+levelNo+"</br>Enemy speed: "+particleSpeed;
-			}
+			levelNo++;
+			document.getElementById("status").innerHTML="Level: "+levelNo+"</br>Enemy speed: "+particleSpeed;
+			levelKills = 0;
 			//Save scores here
 			energy = 50; //Need to rest energy for next level
 			score = 0; ///Reset score for next level
+			missedPowerups = 0;
 		} else {
 			shoot();
 		}
@@ -176,15 +188,18 @@ function keyUp(e) {
 	}
 }
 
-function makeParticle() {
-	if (Math.random()>0.5) {
+function makeParticle(isBullet, enemy) {
+	var rand = Math.random();
+	if (rand > 0.66) {
 		particles.push(new Particle(canvas.width,Math.random()*canvas.height, -(5+(Math.random()*6)),0,0));
+	} else if (rand > 0.33) {
+		particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.7), -(5+(Math.random()*6)),0,1));
 	} else {
-		particles.push(new Particle(canvas.width,Math.random()*canvas.height, -(5+(Math.random()*6)),0,1));
+		particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.5), -(5+(Math.random()*6)),0,2));
 	}
 }
 function makePowerup() {
-	powerups.push(new Powerup(Math.random()*canvas.width,20+(Math.random()*(canvas.height-19)),0));
+	powerups.push(new Powerup(Math.random()*canvas.width,20+(Math.random()*(canvas.height-20)),0));
 }
 function makeStar() {
 	stars.push(new Star(canvas.width));
@@ -194,8 +209,8 @@ function makeTarget() {
 }
 
 function shoot(e) { //Called when player clicks
-	var x = player.x;
-	var y = player.y;
+	var x = player.x+74;
+	var y = player.y+36;
 	console.log("shoot! ",x," ",y);
 	if (!inMenu)
 		bullets.push(new Bullet(x, y,1));
@@ -233,19 +248,28 @@ function draw() {
 	for (var i =0; i< particles.length;i++) {
 		//colour = "rgba("+String(particles[i].time%300)+",0,0,0.5)";
 		if (particles[i].type==1) {
-			context.drawImage(enemyImg1, particles[i].x-36, particles[i].y-24,80,50);
+			context.drawImage(enemyImg1, particles[i].x-36, particles[i].y-24,87,37.5);
 		}
-		colour = "Darkorange";
-		context.fillStyle=colour;
-		context.beginPath();
-		context.arc(particles[i].x,particles[i].y, 24, 0, Math.PI*2, true); //size should change over time
-		context.closePath();
-		context.fill();
+		else if (particles[i].type==0) {
+			context.drawImage(enemyImg2, particles[i].x-36, particles[i].y-24,94,48);
+		}
+		else if (particles[i].type==2) {
+			context.drawImage(enemyImg3, particles[i].x-36, particles[i].y-24,193,68);
+		}
+		else if (particles[i].type==3) {
+			context.drawImage(enemyBulletImg, particles[i].x, particles[i].y,50,30);
+		}
+		//colour = "Darkorange";
+		//context.fillStyle=colour;
+		//context.beginPath();
+		//context.arc(particles[i].x,particles[i].y, 24, 0, Math.PI*2, true); //size should change over time
+		//context.closePath();
+		//context.fill();
 	}
 	//Draw player
-	context.fillStyle="red";
-	context.drawImage(playerImg, player.x, player.y-10,40,20);
-	context.fillRect(player.x,player.y,20,10);
+	//context.fillStyle="red";
+	context.drawImage(playerImg, player.x, player.y-10,88,62);
+	//context.fillRect(player.x,player.y,88,40);
 	//Draw Bullets
 	for (var i=0;i<bullets.length;i++) {
 		context.drawImage(bulletImg, bullets[i].x, bullets[i].y-15,50,30);
@@ -257,8 +281,20 @@ function draw() {
 	}
 	//Draw powerups
 	for (var i=0; i<powerups.length;i++) {
-		context.fillStyle="green";
-		context.fillRect(powerups[i].x, powerups[i].y, 20,20);
+		//context.fillStyle="green";
+		//context.fillRect(powerups[i].x, powerups[i].y, 20,20);
+		if (powerups[i].type==0) {
+			
+			//console.log(powerups[i].time);
+			context.globalAlpha = (powerups[i].time / 600);
+			context.drawImage(pickUp1, powerups[i].x, powerups[i].y,29,25);
+			context.globalAlpha = 1;
+			if (powerups[i].time < 301 && missedPowerups > 4) {
+			    context.globalAlpha = 1 - (powerups[i].time / 300);
+			    context.drawImage(pickUpCue1, powerups[i].x - 15, powerups[i].y - 20,57,8);
+			    context.globalAlpha = 1;
+			}
+		}         
 	}
 	//Print scores
 	document.getElementById("scores").innerHTML="Score:\t"+score+"\nEnergy:\t"+energy;
@@ -328,10 +364,21 @@ function update() {
 		}
 		//Check for collisions with powerups
 		for (var j=0;j<powerups.length;j++) {
-			if (boxCollision(player.x, player.y, 20,20, powerups[j].x-10, powerups[j].y-10,20,20)) {
-				powerups.splice(j,1);
-				energy+=10;
+			powerups[j].time--;
+			
+			if (powerups[j].time < 1) {
+			    powerups.splice(j, 1);
+			    missedPowerups++;
 			}
+			
+			if (powerups[j])
+			{
+			    if (boxCollision(player.x, player.y, 45,62, powerups[j].x-30, powerups[j].y+15,20,20)) {
+				    powerups.splice(j,1);
+				    energy+=10;
+			    }
+			}
+			
 		}
 		//Particles
 		for (var i=0;i<particles.length;i++) {
@@ -343,6 +390,17 @@ function update() {
 			if (particles[i].type==1) { //Move type 1 particles ->
 				particles[i].x += (particles[i].xvel*particleSpeed);
 				particles[i].y += (Math.sin(particles[i].time/10)*10*particleSpeed);
+			}
+			if (particles[i].type==2) { //Move type 2 particles ->
+				particles[i].x += ((particles[i].xvel*particleSpeed)/2);
+				particles[i].y += (Math.sin(particles[i].time/40)*5*particleSpeed);
+				if (particles[i].time % 30 == 0)
+				{
+					particles[i].bulletSpawn();
+				}
+			}
+			if (particles[i].type==3) { //Move type 2 particles ->
+				particles[i].x += (particles[i].xvel*particleSpeed);
 			}
 			particles[i].time++;
 			//remove offscreen particles
@@ -369,18 +427,61 @@ function update() {
 			
 			//Check for collisions with bullets
 			for (var j=0;j<bullets.length;j++) {
-				if (boxCollision(particles[i].x-12,particles[i].y-12,48,48,bullets[j].x-3,bullets[j].y-3,12,12)) {
-					bullets.splice(j,1);
-					remove=true;
-					score += 100;
-					hits.particle1++;
-					bulletHits++;
-					updateStats();
+				if (particles[i].type == 1) {
+					if (boxCollision(particles[i].x+5,particles[i].y-25,82,43,bullets[j].x-3,bullets[j].y-3,12,12)) {
+						bullets.splice(j,1);
+						remove=true;
+						score += 100;
+						hits.particle1++;
+						bulletHits++;
+						updateStats();
+					}
+				}
+				else if (particles[i].type == 0) {
+					if (boxCollision(particles[i].x+5,particles[i].y-20,94,48,bullets[j].x-3,bullets[j].y-3,12,12)) {
+						bullets.splice(j,1);
+						remove=true;
+						score += 100;
+						hits.particle1++;
+						bulletHits++;
+						updateStats();
+					}
+				}
+				else if (particles[i].type == 2) {
+					if (boxCollision(particles[i].x+110,particles[i].y-10,193,40,bullets[j].x-3,bullets[j].y-3,12,12)) {
+						bullets.splice(j,1);
+						remove=true;
+						score += 100;
+						hits.particle1++;
+						bulletHits++;
+						updateStats();
+					}
 				}
 			}
 			//Collision with player
-			if (boxCollision(player.x,player.y,20,10,particles[i].x-12,particles[i].y-12,48,48)) {
-				energy=0;
+			if (particles[i].type == 1) {
+			    //context.fillRect(particles[i].x-25,particles[i].y-25,82,43);
+			    if (boxCollision(player.x+45,player.y+5,110,25,particles[i].x-25,particles[i].y-25,82,43)) {
+				    energy=0;
+			    }
+			}
+			else if (particles[i].type == 0) {
+			    //context.fillRect(particles[i].x-30,particles[i].y-23,94,48);
+			    if (boxCollision(player.x+45,player.y+5,110,45,particles[i].x-30,particles[i].y-20,94,48)) {
+				    energy=0;
+			    }
+			}
+			else if (particles[i].type == 2) {
+			    //context.fillRect(particles[i].x-30,particles[i].y-20,185,35);
+			    if (boxCollision(player.x+45,player.y+5,170,25,particles[i].x-15,particles[i].y-30,193,68)) {
+				    energy=0;
+			    }
+			}
+			else if (particles[i].type == 3) {
+			    //context.fillRect(particles[i].x-30,particles[i].y-20,185,35);
+			    if (boxCollision(player.x+10,player.y-15,88,50,particles[i].x-3,particles[i].y-3,12,12)) {
+				    energy=0;
+			    }
 			}
 			if (remove) {particles.splice(i,1); energy--;}
 		}
@@ -416,8 +517,8 @@ function getPosition(e) {
 	}
 	x -=canvas.offsetLeft;
 	y -= canvas.offsetTop;
-	player.x=x;
-	player.y=y;
+	player.x=x-44;
+	player.y=y-30;
 	return [x,y];
 }
 
