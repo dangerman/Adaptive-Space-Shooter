@@ -1,273 +1,19 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
-<style type="text/css">
-
-* {
-	margin: 0;
-	padding: 0;
-}
-
-a img {
-	border: none;
-}
-
-a:link {color: #b8b8b8}
-a:visited {color: #b8b8b8}
-a:active {color: #b8b8b8}
-a:hover {color: #1a239f}
-
-p {
-	margin-top: 5px;
-	margin-left: 14px;
-	font-family:Arial, Helvetica, sans-serif;
-	color: #ffffff;
-	font-size:24px;
-	font-weight:bold;
-}
-
-h1 {
-	margin-top: 5px;
-	margin-left: 14px;
-	font-family:Arial, Helvetica, sans-serif;
-	color: #b8b8b8;
-	font-size:16px;
-	font-weight:normal;
-	text-align: center;
-}
-
-html, body {
-	background-image:url(StarField.jpg);
-	background-attachment:fixed;
-	background-repeat:repeat;
-	height:100%;
-}
-
-#footer {
-    height: 25px; /* Define height of the footer */
-    position: absolute;
-    bottom: 0; /* Sit it on the bottom */
-    left: 0;
-    width: 100%; /* As wide as it's allowed */
-	text-align: center;
-	font-size: 16px;
-	font-family: Arial, Helvetica, sans-serif;
-	color: #b8b8b8;
-}
-
-#footerWedge {
-	width: 1px;
-	height: 10px;
-	clear: both;
-}
-
-#container {
-	background-color: rgba(255,255,255,0.4);
-	width: 950px;
-	margin: 0 auto;
-	position: relative;
-	height: auto !important;
-	min-height: 100%;
-	height: 100%;
-}
-
-#leftSide {
-	width:40px;
-	background-image:url(leftSide.png);
-	background-repeat:repeat-y;
-	float:left;
-	height:100%;
-	position:absolute;
-	left: -40px;
-}
-
-#rightSide {
-	width:40px;
-	background-image:url(rightSide.png);
-	background-repeat:repeat-y;
-	float:right;
-	height:100%;
-	position:absolute;
-	left:950px;
-}
-
-#content {
-	margin-top: -10px;
-	padding-bottom:25px;
-}
-
-#header {
-	margin-top:10px;
-	margin-left:30px;
-	padding-top: 10px;
-	height: 120px;
-	width: 865px;
-}
-
-#header img {
-	float:left;
-}
-
-#spacer {
-	float:left;
-	width:10px;
-	height:64px;
-}
-
-#game {
-	width: 900px;
-	height: 70px;
-	margin-left: 25px;
-	margin-top: 0px;
-	margin-bottom: 15px;
-	border: solid 1px #b8b8b8;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	 -khtml-border-radius: 5px;
-	border-radius: 5px;
-	background-color: rgba(0,0,0,0.3);
-}
-
-#stats {
-	width: 885px;
-	height: 182px;
-	margin-left: 25px;
-	margin-top: 0px;
-	margin-bottom: 15px;
-	padding-top: 10px;
-	padding-left: 15px;
-	border: solid 1px #b8b8b8;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	 -khtml-border-radius: 5px;
-	border-radius: 5px;
-	background-color: rgba(0,0,0,0.3);
-}
-
-#status {
-	width: 885px;
-	height: 52px;
-	margin-left: 25px;
-	margin-top: 0px;
-	margin-bottom: 15px;
-	padding-top: 10px;
-	padding-left: 15px;
-	border: solid 1px #b8b8b8;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	 -khtml-border-radius: 5px;
-	border-radius: 5px;
-	background-color: rgba(0,0,0,0.3);
-	font-size: 35px;
-	text-align: center;
-}
-
-#scores {
-	width: 900px;
-	height: 70px;
-	margin-left: 25px;
-	margin-top: 15px;
-	margin-bottom: 15px;
-	padding-top: 20px;
-	border: solid 1px #b8b8b8;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	 -khtml-border-radius: 5px;
-	border-radius: 5px;
-	background-color: rgba(0,0,0,0.3);
-	font-size: 42px;
-	text-align: center;
-}
-
-#myCanvas {
-	width: 900px;
-	height: 450px;
-	margin-left: 25px;
-	margin-top: 0px;
-	border: solid 1px #b8b8b8;
-	-moz-border-radius: 5px;
-	-webkit-border-radius: 5px;
-	 -khtml-border-radius: 5px;
-	border-radius: 5px;
-}
-
-</style>
-
-<!--[if IE]>
-
-<style type="text/css">
-
-
-#container {
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,endColorstr=#99000000);
-	-ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#99000000,endColorstr=#99000000);
-	width: 950px;
-	margin: 0 auto;
-	position: relative;
-	height: auto !important;
-	min-height: 100%;
-	height: 100%;
-}
-
-#content {
-	margin-top: -10px;
-	padding-bottom: 25px;
-}
-
-#game {
-	width: 900px;
-	height: 70px;
-	margin-left: 25px;
-	margin-top: 0px;
-	margin-bottom: 15px;
-	border: solid 1px #b8b8b8;
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3000000,endColorstr=#b3000000);
-	-ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3000000,endColorstr=#b3000000);
-}
-
-#scores {
-	width: 900px;
-	height: 70px;
-	margin-left: 25px;
-	margin-top: 15px;
-	margin-bottom: 15px;
-	border: solid 1px #b8b8b8;
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3000000,endColorstr=#b3000000);
-	-ms-filter:progid:DXImageTransform.Microsoft.gradient(startColorstr=#b3000000,endColorstr=#b3000000);
-}
-
-</style>
-
-<![endif]-->
-
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<meta http-equiv="X-UA-Compatible" content="IE=9" />
-<title>Adaptive Space Shooter</title>
-</head>
-
+Game
+</br>
 <body>
-<div id="container">
-<div id="content">
-	<div id="leftSide"></div>
- 	<div id="rightSide"></div>
-	<div id="header"><img src="Title.png" />
-	
-	<a href="https://github.com/dangerman/Adaptive-Space-Shooter"><img style="position: absolute; top: 0; left: 0; border: 0; " src="https://a248.e.akamai.net/camo.github.com/6429057dfef9e98189338d22e7f6646c6694f032/687474703a2f2f73332e616d617a6f6e6177732e636f6d2f6769746875622f726962626f6e732f666f726b6d655f6c6566745f6f72616e67655f6666373630302e706e67" alt="Fork me on GitHub"></a>
-	
-	</div>
-    <div id="game">
-    <p>INSTRUCTIONS:<br/>Use arrow keys or mouse to move and click or press space to shoot
-    </p></div>
-    <canvas id = "myCanvas" width="900" height="450" tabindex="1">
-    <!-- Need to set the tab index so it gets keyboard inputs -->
-    </canvas>
-    <p id = "scores">
-    </p>
-    <p id = "status">
-    </p>
-    <p id = "stats">
-    </p>
+<p>Use arrow keys or mouse to move and click or press space to shoot
+</p>
+<canvas id = "myCanvas" width="900" height="450" tabindex="1">
+<!-- Need to set the tab index so it gets keyboard inputs -->
+</canvas>
+<p id = "scores">
+</p>
+<p id = "stats">
+</p>
+<p id = "status">
+</p>
 <script type="text/javascript">
 //Remove curosr
 document.getElementById("myCanvas").style.cursor = "none";
@@ -294,7 +40,6 @@ function playSound(sound) {
 var playerImg = new Image();
 playerImg.src = "PlayerShip.png";
 var playerImg2 = new Image();
-playerImg2.src = "PlayerShip2.png";
 var bulletImg = new Image();
 bulletImg.src = "Bullet.png";
 var enemyBulletImg = new Image();
@@ -303,12 +48,8 @@ var enemyImg1 = new Image();
 enemyImg1.src = "EasyEnemy.png";
 var enemyImg2 = new Image();
 enemyImg2.src = "MediumEnemy.png";
-var enemyImg2b = new Image();
-enemyImg2b.src = "MediumEnemy2.png";
 var enemyImg3 = new Image();
 enemyImg3.src = "HardEnemy.png";
-var enemyImg3b = new Image();
-enemyImg3b.src = "HardEnemy2.png";
 var pickUp1 = new Image();
 pickUp1.src = "Life.png";
 var pickUpCue1 = new Image();
@@ -321,15 +62,13 @@ var starCount = 50; //number of stars
 var size = 10; //Size of particle
 var gametime = 0;
 var score = 0;
-var energy = 900;
-var levelNo = 1; //0th level is menu
+var energy = 50;
+var levelNo = 0; //0th level is menu
 var levelKills = 0;
 var levelComplete = false;
 var levelFailed = false;
 var inMenu = true;
 var missedPowerups = 0;
-var rank = "C";
-var tip = "Try to dodge the enemies and their gunfire!";
 
 //Adaptive variables
 var particleSpeed = 0.5;
@@ -337,11 +76,8 @@ var targetSpeed;
 var targetHP;
 var spawnInterval = 50; //how often to spawn enemies
 var powerupInterval = 120; //how often to give powerups
-var enemyBulletFreq = 120;
-var scoreThreshold = 6000; //Kills needed to pass to next level
-var enemyHPMultiplier = 1;
-var accuracyLevel = 0;
-var SPMLevel = 0;
+var enemyBulletFreq = 30;
+var levelKillThreshold = 2; //Kills needed to pass to next level
 
 //Storing stats
 hits = new Object();
@@ -365,7 +101,7 @@ function Star(x) {
 	this.xvel = 5+Math.random()*5;
 	this.size = Math.random()*3;
 }
-function Particle(x,y,xvel,yvel,type, hp) { //Basic enemies - kill player upon contact, destroyed by bullets
+function Particle(x,y,xvel,yvel,type) { //Basic enemies - kill player upon contact, destroyed by bullets
 	this.x = x;
 	this.y = y;
 	this.xvel = xvel;
@@ -373,10 +109,9 @@ function Particle(x,y,xvel,yvel,type, hp) { //Basic enemies - kill player upon c
 	this.time = 0; //Time since particle spawned
 	this.type = type;
 	this.bulletSpawn = bulletSpawn;
-	this.hp = hp;
 }
 function bulletSpawn() {
-	particles.push(new Particle(this.x,this.y, -20,0,3, 1000));
+	particles.push(new Particle(this.x,this.y, -20,0,3));
 }
 function Bullet(x,y,type) { //Bullets fired by player
 	this.x = x;
@@ -404,7 +139,7 @@ player = new Player();
 //Set up canvas and stuff so we can draw
 var canvas = document.getElementById("myCanvas");
 var context = canvas.getContext("2d");
-context.strokeStyle = "blue"; 
+context.strokeStyle = "blue"; //wtf?
 context.fillStyle="black";
 canvas.onmousemove = getPosition;
 //Portal object
@@ -434,21 +169,17 @@ function keyPressed(e) {
 	if (e.keyCode==32) { //Space bar
 		if (inMenu) {
 			inMenu = false;
-			
 			//save high scores
 			//update Player model
 			//generate level variables
-			if (portal.on && levelComplete)
-				levelNo++;
-			updateTip();
-			document.getElementById("status").innerHTML="Tip: "+tip;
+			levelNo++;
+			document.getElementById("status").innerHTML="Level: "+levelNo+"</br>Enemy speed: "+particleSpeed;
 			levelKills = 0;
 			levelComplete = false;
 			portal.on = false;
-			energy = 1000; //Need to rest energy for next level
+			energy = 50; //Need to rest energy for next level
 			score = 0; ///Reset score for next level
 			missedPowerups = 0;
-			gametime = 0;
 		} else {
 			shoot();
 		}
@@ -470,103 +201,14 @@ function keyUp(e) {
 }
 
 function makeParticle(isBullet, enemy) {
-
-	switch (levelNo)
-	{
-		case 1 : particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.9), -(5+(Math.random()*6)),0,0,1)); break;
-		case 2 : particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.7), -(5+(Math.random()*6)),0,1,1)); break;
-		case 3 : 
-		{
-			var rand = Math.random();
-			if (rand > 0.5) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.9), -(5+(Math.random()*6)),0,0,1));
-			} else if (rand > 0.33) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.7), -(5+(Math.random()*6)),0,1,1));
-			}
-		} break;
-		case 4 : 
-		{
-			var rand = Math.random();
-			if (rand > 0.1) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.9), -(5+(Math.random()*6)),0,0,1));
-			} else {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.5), -(5+(Math.random()*6)),0,2,100));
-			}
-		} break;		
-		case 5 : 
-		{
-			var rand = Math.random();
-			if (rand > 0.2) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.9), -(5+(Math.random()*6)),0,0,1));
-			} else  {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.5), -(5+(Math.random()*6)),0,2,100));
-			}
-		} break;
-		case 6 : 
-		{
-			var rand = Math.random();
-			if (rand > 0.66) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.9), -(5+(Math.random()*6)),0,0,1));
-			} else if (rand > 0.15) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.7), -(5+(Math.random()*6)),0,1,1));
-			} else {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.5), -(5+(Math.random()*6)),0,2,100));
-			}
-		} break;
-		case 7 : 
-		{
-			var rand = Math.random();
-			if (rand > 0.90) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.9), -(5+(Math.random()*6)),0,0,1));
-			} else if (rand > 0.15) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.7), -(5+(Math.random()*6)),0,1,1));
-			} else {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.5), -(5+(Math.random()*6)),0,2,100));
-			}
-		} break;
-		case 8 : 
-		{
-			var rand = Math.random();
-			if (rand > 0.85) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.9), -(5+(Math.random()*6)),0,0,1));
-			} else if (rand > 0.30) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.7), -(5+(Math.random()*6)),0,1,1));
-			} else {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.5), -(5+(Math.random()*6)),0,2,100));
-			}
-		} break;
-		case 9 : 
-		{
-			var rand = Math.random();
-			if (rand > 0.70) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.9), -(5+(Math.random()*6)),0,0,1));
-			} else if (rand > 0.60) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.7), -(5+(Math.random()*6)),0,1,1));
-			} else {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.5), -(5+(Math.random()*6)),0,2,100));
-			}
-		} break;
-		case 10 : 
-		{
-			var rand = Math.random();
-			if (rand > 0.90) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.9), -(5+(Math.random()*6)),0,0,1));
-			} else if (rand > 0.80) {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.7), -(5+(Math.random()*6)),0,1,1));
-			} else {
-				particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.5), -(5+(Math.random()*6)),0,2,100));
-			}
-		} break;
-	}
-
-	/*var rand = Math.random();
+	var rand = Math.random();
 	if (rand > 0.66) {
-		particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.9), -(5+(Math.random()*6)),0,0,1));
+		particles.push(new Particle(canvas.width,Math.random()*canvas.height, -(5+(Math.random()*6)),0,0));
 	} else if (rand > 0.33) {
-		particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.7), -(5+(Math.random()*6)),0,1,1));
+		particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.7), -(5+(Math.random()*6)),0,1));
 	} else {
-		particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.5), -(5+(Math.random()*6)),0,2,100));
-	}*/
+		particles.push(new Particle(canvas.width,(canvas.height * 0.05) + Math.random()*(canvas.height*0.5), -(5+(Math.random()*6)),0,2));
+	}
 }
 function makePowerup() {
 	powerups.push(new Powerup(Math.random()*canvas.width,20+(Math.random()*(canvas.height-20)),0));
@@ -581,7 +223,7 @@ function makeTarget() {
 function shoot(e) { //Called when player clicks
 	var x = player.x+74;
 	var y = player.y+36;
-	console.log("shoot! ",x," ",y);
+	//console.log("shoot! ",x," ",y);
 	if (!inMenu)
 		bullets.push(new Bullet(x, y,1));
 }
@@ -621,25 +263,10 @@ function draw() {
 			context.drawImage(enemyImg1, particles[i].x-36, particles[i].y-24,87,37.5);
 		}
 		else if (particles[i].type==0) {
-			if (gametime % 6 == 0 || gametime % 6 == 1 || gametime % 6 == 2)
-				context.drawImage(enemyImg2, particles[i].x-36, particles[i].y-24,94,48);
-			else
-				context.drawImage(enemyImg2b, particles[i].x-36, particles[i].y-24,94,48);
+			context.drawImage(enemyImg2, particles[i].x-36, particles[i].y-24,94,48);
 		}
 		else if (particles[i].type==2) {
-			if (gametime % 6 == 0 || gametime % 6 == 1 || gametime % 6 == 2)
-				context.drawImage(enemyImg3, particles[i].x-36, particles[i].y-24,193,68);
-			else
-				context.drawImage(enemyImg3b, particles[i].x-36, particles[i].y-24,193,68);
-			
-			if (particles[i].hp > 50)
-				context.fillStyle="lawngreen";
-			else if (particles[i].hp > 25)
-				context.fillStyle="orange";
-			else
-				context.fillStyle="red";
-				
-			context.fillRect(particles[i].x+40,particles[i].y - 30,particles[i].hp/2,4);
+			context.drawImage(enemyImg3, particles[i].x-36, particles[i].y-24,193,68);
 		}
 		else if (particles[i].type==3) {
 			context.drawImage(enemyBulletImg, particles[i].x, particles[i].y,50,30);
@@ -652,19 +279,9 @@ function draw() {
 		//context.fill();
 	}
 	//Draw player
-	if (energy > 500)
-		context.fillStyle="lawngreen";
-	else if (energy > 250)
-		context.fillStyle="orange";
-	else
-		context.fillStyle="red";
-		
-	if (gametime % 6 == 0 || gametime % 6 == 1 || gametime % 6 == 2)
-		context.drawImage(playerImg, player.x, player.y-10,88,62);
-	else
-		context.drawImage(playerImg2, player.x, player.y-10,88,62);
-		
-	context.fillRect(0,0,energy*0.90,4);
+	//context.fillStyle="red";
+	context.drawImage(playerImg, player.x, player.y-10,88,62);
+	//context.fillRect(player.x,player.y,88,40);
 	//Draw Bullets
 	for (var i=0;i<bullets.length;i++) {
 		context.drawImage(bulletImg, bullets[i].x, bullets[i].y-15,50,30);
@@ -688,7 +305,7 @@ function draw() {
 			    context.globalAlpha = 1 - (powerups[i].time / 300);
 			    context.drawImage(pickUpCue1, powerups[i].x - 15, powerups[i].y - 20,57,8);
 			    context.globalAlpha = 1;
-			    console.log("pickupcue displayed");
+				console.log("pickupcue displayed");
 			}
 		}         
 	}
@@ -697,7 +314,7 @@ function draw() {
 		context.drawImage(portalImg, portal.x, portal.y);
 	}
 	//Print scores
-	document.getElementById("scores").innerHTML="Score:\t"+score;
+	document.getElementById("scores").innerHTML="Score:\t"+score+"\nEnergy:\t"+energy;
 	if (energy<=0) {
 		inMenu = true;
 		document.getElementById("scores").innerHTML="High score: "+score+"\tRefresh page to try again!";
@@ -714,10 +331,10 @@ function update() {
 		context.fillStyle="black";
 		context.font="50px sans-serif";
 		context.textBaseline="middle";
-		if (levelNo==0) {
+		if (levelNo==1) {
 			context.fillText("Press Space to start",canvas.width/9, canvas.height/2);
 		} else if (levelComplete){
-			context.fillText("Level " + levelNo + " complete! Rank: " + rank,canvas.width/8, canvas.height/2);
+			context.fillText("Level complete!",canvas.width/4, canvas.height/2);
 		} else {
 			context.fillText("You died D:",canvas.width/4, canvas.height/2);
 		}
@@ -735,11 +352,11 @@ function update() {
 				makePowerup();
 			}
 		}
-		var remove = false;
-		if (score>=scoreThreshold) {
+		if (levelKills>=levelKillThreshold) {
 			//Create portal
 			portal.on = true;
 		}
+		var remove = false; //Not sure this line is needed...
 		//Move the player for keyboard input
 		if (player.goingUp) {
 			player.y -= 6;
@@ -781,7 +398,7 @@ function update() {
 			{
 			    if (boxCollision(player.x, player.y, 45,62, powerups[j].x-30, powerups[j].y+15,20,20)) {
 				    powerups.splice(j,1);
-				    energy+=50;
+				    energy+=10;
 			    }
 			}
 			
@@ -800,7 +417,7 @@ function update() {
 			if (particles[i].type==2) { //Move type 2 particles ->
 				particles[i].x += ((particles[i].xvel*particleSpeed)/2);
 				particles[i].y += (Math.sin(particles[i].time/40)*5*particleSpeed);
-				if (particles[i].time % enemyBulletFreq == 0)
+				if (particles[i].time % 30 == 0)
 				{
 					particles[i].bulletSpawn();
 				}
@@ -822,7 +439,7 @@ function update() {
 				for (var j=0;j<targets.length;j++) {
 					if (particles[i].x<targets[j].x+(canvas.width/8) && particles[i].x>targets[j].x-(canvas.width/8)) {
 						score++;
-						//energy++;
+						energy++;
 						targets[j].hits++;
 						console.log("Hit!");
 						break;
@@ -857,17 +474,13 @@ function update() {
 				}
 				else if (particles[i].type == 2) {
 					if (boxCollision(particles[i].x+110,particles[i].y-10,193,40,bullets[j].x-3,bullets[j].y-3,12,12)) {
-						particles[i].hp = particles[i].hp - 25;
-						if (particles[i].hp < 1)
-						{
-						      remove=true;
-						      levelKills++;
-						}
 						bullets.splice(j,1);
+						remove=true;
 						score += 100;
 						hits.particle1++;
 						bulletHits++;
 						updateStats();
+						levelKills++;
 					}
 				}
 			}
@@ -875,29 +488,25 @@ function update() {
 			if (particles[i].type == 1) {
 			    //context.fillRect(particles[i].x-25,particles[i].y-25,82,43);
 			    if (boxCollision(player.x+45,player.y+5,110,25,particles[i].x-25,particles[i].y-25,82,43)) {
-				    energy-=50;
-				    remove = true;
+				    energy=0;
 			    }
 			}
 			else if (particles[i].type == 0) {
 			    //context.fillRect(particles[i].x-30,particles[i].y-23,94,48);
 			    if (boxCollision(player.x+45,player.y+5,110,45,particles[i].x-30,particles[i].y-20,94,48)) {
-				    energy-=50;
-				    remove = true;
+				    energy=0;
 			    }
 			}
 			else if (particles[i].type == 2) {
 			    //context.fillRect(particles[i].x-30,particles[i].y-20,185,35);
 			    if (boxCollision(player.x+45,player.y+5,170,25,particles[i].x-15,particles[i].y-30,193,68)) {
-				    energy-=50;
-				    remove = true;
+				    energy=0;
 			    }
 			}
 			else if (particles[i].type == 3) {
 			    //context.fillRect(particles[i].x-30,particles[i].y-20,185,35);
 			    if (boxCollision(player.x+10,player.y-15,88,50,particles[i].x-3,particles[i].y-3,12,12)) {
-				    energy-=50;
-				    remove = true;
+				    energy=0;
 			    }
 			}
 			if (remove) {particles.splice(i,1); energy--;}
@@ -917,12 +526,10 @@ function update() {
 				bullets.splice(i,1);
 			  }
 		}
-		
 		//Collisions with portal
-		if (boxCollision(player.x+45,player.y+5,88,50,portal.x+5,portal.y+5,100,150) && portal.on) {
+		if (boxCollision(player.x+45,player.y+5,88,50,portal.x+5,portal.y+5,100,150)) {
 			levelComplete = true;
 			inMenu = true;
-			updateLevelVariables();
 		}
 		//if (energy<0) {running=false;}
 	}
@@ -940,7 +547,7 @@ function getPosition(e) {
 	}
 	x -=canvas.offsetLeft;
 	y -= canvas.offsetTop;
-	player.x=x-44-(document.body.clientWidth/2)+450;
+	player.x=x-44;
 	player.y=y-30;
 	return [x,y];
 }
@@ -953,106 +560,10 @@ function boxCollision(x,y,w,h,x2,y2,w2,h2 ) { //Top left, width, height corners 
 }
 
 function updateStats() {
-	document.getElementById("stats").innerHTML="Level: "+levelNo+" <br/>Enemy speed:  "+particleSpeed+"<br/>Hits: "+hits.particle1+"</br> Missed enemies: "+misses.particle1+"</br>Overall Accuracy: "+Math.floor((bulletHits/(bulletHits+bulletMisses))*100)
-	+"</br>Score Per Minute: "+Math.floor(score / (gametime/3600));
-}
-
-function updateLevelVariables() {
-	var scorePerMinute = score / (gametime);
-	var accuracy = Math.floor((bulletHits/(bulletHits+bulletMisses))*100);
-	
-	if (accuracy < 10)
-		accuracyLevel = 0;
-	else if (accuracy < 30)
-		accuracyLevel = 1;
-	else
-		accuracyLevel = 2;
-		
-		
-	console.log("accuracy " + accuracy + " " + accuracyLevel);
-		
-	if (scorePerMinute < 5000*(0.5+levelNo/2))
-		SPMLevel = 0;
-	else if (scorePerMinute < 6750*(0.5+levelNo/2))
-		SPMLevel = 1;
-	else
-		SPMLevel = 2;
-		
-	rank = "C"
-		
-	if (accuracyLevel == 0 && SPMLevel == 0)
-	{
-		particleSpeed *= 0.8;
-		enemyHPMultiplier *= 0.8;
-		spawnInterval += 10;
-		powerupInterval -= 10;
-		enemyBulletFreq *= 0.8;
-		score -= 500;		
-		rank = "D";
-	}
-	else if (accuracyLevel == 2 && SPMLevel == 0)
-	{
-		particleSpeed *= 1.2;
-		enemyHPMultiplier *= 1.2;
-		spawnInterval -= 10;
-		powerupInterval += 12;
-		enemyBulletFreq *= 1.2;
-		score += 3000;	
-		rank = "B";
-	}
-	else if (accuracyLevel == 0 && SPMLevel == 2)
-	{
-		particleSpeed *= 1.2;
-		enemyHPMultiplier *= 1.5;
-		spawnInterval -= 12;
-		powerupInterval += 12;
-		enemyBulletFreq *= 1.1;
-		score += 3000;	
-		rank = "B";
-	}
-	else if (accuracyLevel == 2 && SPMLevel == 2)
-	{
-		particleSpeed *= 1.3;
-		enemyHPMultiplier *= 1.5;
-		spawnInterval -= 15;
-		powerupInterval += 15;
-		enemyBulletFreq *= 1.2;
-		score += 5000;	
-		rank = "A";
-	}
-	
-	score = 0;
-	bulletMisses = 0;
-	bulletHits = 0;
-	
-}
-
-function updateTip() {
-	if (accuracyLevel == 0 && SPMLevel == 0)
-	{
-		if (Math.random() > 0.5)
-			tip = "Try to dodge the enemies and their gunfire!";
-		else
-			tip = "Sometimes avoiding fire is better than firing back";
-	}
-	else if ((accuracyLevel == 0 && SPMLevel == 2) || (accuracyLevel == 2 && SPMLevel == 0))
-	{
-		if ((accuracyLevel == 0 && SPMLevel == 2) && Math.random() > 0.5)
-			tip = "Adjust your position after death into clear space";
-		else
-			tip = "Accuracy AND kills are important!";
-	}
-	else if (missedPowerups > 2)
-		tip = "Hearts give you health. Pick them up!";
-	else if (accuracyLevel == 2 && SPMLevel == 2)
-		tip = "God Like!!! :D";
-	
+	document.getElementById("stats").innerHTML="Hits: "+hits.particle1+"</br> Missesed enemies: "+misses.particle1+"</br>Overall Accuracy: "+(bulletHits/bulletHits+bulletMisses);
 }
 
 </script>
-    <div id="footerWedge"></div>
-</div>
-<div id="footer">Adaptive Space Shooter</div>
-</div>
 </body>
+</head>
 </html>
